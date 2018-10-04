@@ -19,7 +19,7 @@ V include_string(S str_1, S str_2, I ptr, I max)				//<	writes in str_2 into str
 		str_1[ptr + i] = str_2[i];		
 }
 
-V clear_str(S str, I j)
+V clear_str(S str, I j)											//<	set 0 for str[0] -->str[j-1]
 {
 	for (I i = 0; i < j; i++)
 		str[i] = 0;
@@ -33,34 +33,40 @@ V show_img(S* heart, S background_col, C background_char, ter_conf _ter_conf)			
 	ter_conf _ter_var = &a;
 
 	gotoxy(0, 0);
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_conf);
-	if (_ter_conf->ws_col < HEART_W || _ter_conf->ws_row < HEART_H) {													//<	in case of small screen
-		DO(_ter_conf->ws_row, {DO(_ter_conf->ws_col, {O(" ");});O("\n");});
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_conf);															//<	get window size
+
+	if (_ter_conf->ws_col < HEART_W || _ter_conf->ws_row < HEART_H) {										//<	in case of small screen
+		DO(_ter_conf->ws_row, {DO(_ter_conf->ws_col, {O(" ");});O("\n");});									//<	draw blank screen
 		R;
 	}
-	O("%s", background_col);
-	DO((_ter_conf->ws_row - HEART_H)/2, {DO(_ter_conf->ws_col, {O("%c", background_char);}); O("\n");}); 			//< draw top
+
+	O("%s", background_col);																				//<	set background colour
+	DO((_ter_conf->ws_row - HEART_H)/2, {DO(_ter_conf->ws_col, {O("%c", background_char);}); O("\n");}); 	//< draw top
 	fflush(stdout);
-	for (j = 0; j < HEART_H; j++){
+
+	for (j = 0; j < HEART_H; j++){																			//<	for each img line
 		O("%s", background_col);
-		DO((_ter_conf->ws_col - HEART_W)/2, {O("%c", background_char);});						//<	draw left
-		O("%s", heart[j]);
+		DO((_ter_conf->ws_col - HEART_W)/2, {O("%c", background_char);});									//<	draw left
+		O("%s", heart[j]);																					//<	img line
 		dif = (_ter_conf->ws_col % 2) ? 0 : 1;
 		O("%s", background_col);
-		DO((_ter_conf->ws_col - HEART_W)/2 + dif, {O("%c", background_char);});					//<	draw right
+		DO((_ter_conf->ws_col - HEART_W)/2 + dif, {O("%c", background_char);});								//<	draw right
 		fflush(stdout);
 		O("\n");
 	}
+	
 	dif = (_ter_conf->ws_row % 2) ? 1 : 0;
 	DO((_ter_conf->ws_row - HEART_H)/2 + dif, {DO(_ter_conf->ws_col, {O("%c", background_char);}); O("\n");}); 	//< draw down
 	fflush(stdout);
 
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
-	if (_ter_var->ws_col != _ter_conf->ws_col || _ter_conf->ws_row != _ter_var->ws_row)
-		show_img(heart, background_col, background_char, _ter_conf);
+
+	if (_ter_var->ws_col != _ter_conf->ws_col || _ter_conf->ws_row != _ter_var->ws_row)						//<	if screen size changed
+		show_img(heart, background_col, background_char, _ter_conf);										//<	draw the same img with different size
+
 }
 
-V draw_heart()																					//< print rand img
+V draw_heart()																								//< print rand img
 {
 	FILE *db, *idx;
 	I pos, i, j, pause = SEC, n, bytesWaiting;
@@ -85,27 +91,20 @@ V draw_heart()																					//< print rand img
 
 	CLEAR;
 
-	for(;;) { 																			//< testing 
+	for (;;) { 														//< testing 
 		pos = get_addr(rand() % par->amount, idx);					//< get address of img in db
-
 		get_heart(db, pos, heart);									//< get img pattern into heart
 		get_background(db, back, pos);								//< get background info into back
-	
 		show_img(heart, back->col, back->ch, _ter_conf);			//<	draw img
-
 		pause = (pause == (SEC * 6)/7) ? (SEC*1)/2 : (SEC * 6)/7;	//< set pause
 		usleep(pause);				
 
-    	if (kbhit()) {
-    		// fseek(stdin, -1, SEEK_CUR);
-    		// fwrite(&c, SZ(C), 1, stdin);
-    		// fflush(stdin);
+    	if(kbhit())
     		break;
-    	}
 	}
 
 
-	O("%s\n", CNRM);
+	O("%s\n", CNRM);												//<	set back to normal
 
 	for (i = 0; i < HEART_H; i++) 
 		free(heart[i]); 
