@@ -8,9 +8,10 @@
 #include <string.h>
 #include "dat.h"
 #include "config.h"
+#include <sys/ioctl.h>
 
 
-V include_string(S str_1, S str_2, I ptr, I max)	
+V include_string(S str_1, S str_2, I ptr, I max)				//<	writes in str_2 into str_1
 {
 	I i;
 	for (i = 0; str_2[i] != 0 && i < max; i++) 
@@ -24,46 +25,50 @@ V clear_str(S str, I j)
 }
 
 
-V show_img(S* heart, S background_col, C background_char, I w, I h)								//< print img 
+V show_img(S* heart, S background_col, C background_char, ter_conf _ter_conf)								//< print img 
 {
-	I j, dif;
+	I j, dif, k = 0;
+	struct winsize a;
+	ter_conf _ter_var = &a;
 
-	if (w < 17 || h < 7) {													//<	in case of small screen
-		DO(h, {DO(w, {O(" ");});O("\n");});
+	gotoxy(0, 0);
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_conf);
+	if (_ter_conf->ws_col < HEART_W || _ter_conf->ws_row < HEART_H) {													//<	in case of small screen
+		DO(_ter_conf->ws_row, {DO(_ter_conf->ws_col, {O(" ");});O("\n");});
 		R;
 	}
-
 	O("%s", background_col);
-	DO((h - 7)/2, {DO(w, {O("%c", background_char);}); O("\n");}); 			//< draw top
+	DO((_ter_conf->ws_row - HEART_H)/2, {DO(_ter_conf->ws_col, {O("%c", background_char);}); O("\n");}); 			//< draw top
 	fflush(stdout);
-
-	for (j = 0; j < 7; j++){
+	for (j = 0; j < HEART_H; j++){
 		O("%s", background_col);
-		DO((w - 17)/2, {O("%c", background_char);});						//<	draw left
-
+		DO((_ter_conf->ws_col - HEART_W)/2, {O("%c", background_char);});						//<	draw left
 		O("%s", heart[j]);
-		dif = (w % 2) ? 0 : 1;
+		dif = (_ter_conf->ws_col % 2) ? 0 : 1;
 		O("%s", background_col);
-		DO((w - 17)/2 + dif, {O("%c", background_char);});					//<	draw right
+		DO((_ter_conf->ws_col - HEART_W)/2 + dif, {O("%c", background_char);});					//<	draw right
 		fflush(stdout);
 		O("\n");
 	}
-
-	dif = (h % 2) ? 1 : 0;
-	DO((h - 7)/2 + dif, {DO(w, {O("%c", background_char);}); O("\n");}); 	//< draw down
+	dif = (_ter_conf->ws_row % 2) ? 1 : 0;
+	DO((_ter_conf->ws_row - HEART_H)/2 + dif, {DO(_ter_conf->ws_col, {O("%c", background_char);}); O("\n");}); 	//< draw down
 	fflush(stdout);
+
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
+	if (_ter_var->ws_col != _ter_conf->ws_col || _ter_conf->ws_row != _ter_var->ws_row)
+		show_img(heart, background_col, background_char, _ter_conf);
 }
 
 V draw_heart()																					//< print rand img
 {
 	FILE *db, *idx;
-	I pos, i, num, j, pause = SEC;
+	I pos, i, j, pause = SEC;
 	S *heart;
 	pParams para = {0, 0};
 	params par = &para;
 	pBackground back_;
 	background back = &back_;
-	pTer_conf a = {136, 37};		//<	test [136, 37];
+	struct winsize a;
 	ter_conf _ter_conf = &a;
 
 	db = fopen("bin/db.dat", "r+b");
@@ -71,31 +76,26 @@ V draw_heart()																					//< print rand img
 
 	get_params(idx, par);
 
-	heart = malloc(SZ(S) * 7);
-	for (i = 0; i < 7; i++) 
-		heart[i] = malloc(SZ(C) * 200);
+	heart = malloc(SZ(S) * HEART_H);
+	for (i = 0; i < HEART_H; i++) 
+		heart[i] = malloc(SZ(C) * par->max_line);
 
 
 	CLEAR;
 
-	for(i = 0; i < 15; i++) { 
-		num = rand() % par->amount;
-
-		pos = get_addr(num, idx);
+	for(i = 0; i < 20; i++) { 					//< testing 
+		pos = get_addr(rand() % par->amount, idx);
 
 		get_heart(db, pos, heart);
 		get_background(db, back, pos);
 	
-		show_img(heart, back->col, back->ch, _ter_conf->width, _ter_conf->height);
+		show_img(heart, back->col, back->ch, _ter_conf);
 
-		gotoxy(0, 0);
-
-		fflush(stdout);
-		pause = (pause == SEC) ? (SEC*2)/3 : SEC;
+		pause = (pause == (SEC * 6)/7) ? (SEC*1)/2 : (SEC * 6)/7;
 		usleep(pause);
 	}
 
-	for (i = 0; i < 7; i++) 
+	for (i = 0; i < HEART_H; i++) 
 		free(heart[i]); 
 	free(heart);
 
