@@ -9,6 +9,7 @@
 
 #define SEC 1000000
 #define END '@'
+#define DELIM '#'
 
 #define gotoxy(x,y) printf("\033[%d;%dH",(x),(y))
 
@@ -26,7 +27,7 @@ typedef struct Params {
 } pParams;
 
 typedef struct Background {
-	C col[15];
+	C col[19];
 	C ch;
 } pBackground;
 
@@ -51,13 +52,7 @@ typedef pTer_conf* ter_conf;
 #define CNRM 	"\x1b[0;0m\0"
 
 	
-	C cap[6] = 			 ".:::.\0";
-	C sec_line[12] = 	":::::::.:::\0";
-	C th_line[16] = 	":::::::::::::::\0";
-	C 4_line_1[6] = 	"\'::::\0";
-	C 4_line_2[6] =		"::::\'\0";
-	C 5_line[12] = 		"\':::::::::\'\0";
-	C 6_line[8] =		"\':::::\'\0";
-	C 7_line[4] = 		"\':\'\0";
 
-	C bck_chr[2] = {' ', ':'};
+ext V get_background(FILE *db, background back, I ptr);
+
+ext V get_params(FILE *idx, params par);
