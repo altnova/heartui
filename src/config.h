@@ -8,14 +8,12 @@
 #include <string.h>
 #include <sys/ioctl.h>
 
-
 #define SEC 1000000
 #define END '@'
 #define DELIM '#'
 
 #define HEART_H 7
 #define HEART_W 17
-// #define MAX_COL_LEN 19
 
 #define gotoxy(x,y) printf("\033[%d;%dH",(x),(y))
 
@@ -33,23 +31,16 @@ typedef struct Params {
 } pParams;
 
 typedef struct Background {
-	C col[19];
+	C col[27];						//<	max len of colour str
 	C ch;
 } pBackground;
 
 
 typedef struct winsize pTerminal_conf;
 
-/*
-typedef struct Terminal_conf {
-	I width;
-	I height;
-}	pTer_conf;
-*/
 typedef pParams* params;
 typedef pBackground* background;
 typedef pTerminal_conf* ter_conf;
-
 
 
 #define CWHT 	"\x1b[0;0m\x1b[37m\0"
@@ -61,6 +52,7 @@ typedef pTerminal_conf* ter_conf;
 #define CRED 	"\x1b[0;0m\x1b[31m\0"
 #define CNRM 	"\x1b[0;0m\0"
 
+//<	add your colours
 	
 ext V get_background(FILE *db, background back, I ptr);
 ext V get_params(FILE *idx, params par);
