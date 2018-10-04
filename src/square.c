@@ -37,31 +37,25 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	pBackground bck_;
 	background bck = &bck_;
 	strcpy(bck->col, background_colour);
-
 	bck->ch = background_char;									//<		bck 	img pattern 
 	fwrite(bck, SZ(pBackground), 1, ptr);						//<	|_______|_______________________|
 																//<	write in bck info
 	len += SZ(pBackground);
-
 	clear_str(line, i+1);
 
 	/*	first line 	*/
 
 	include_n_cnt(line, background_colour, &i, scnt(background_colour));		//<	background colour
 	line[i++] = background_char;												//<	' ' || ':'
-
-
 	if (background_char == ':') 												//<	if ':'	--> ':''
 		line[i++] = '\'';
 	else {
 		include_n_cnt(line, CNRM, &i, scnt(CNRM));								//<	if ' '	--> set nrm && ' '
 		line[i++] = ' ';
 	}
-
 	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));					//<	set heart colour
-	include_n_cnt(line, cap, &i, scnt(cap));
-	include_n_cnt(line, background_colour, &i, scnt(background_colour));		//<	write
-
+	include_n_cnt(line, cap, &i, scnt(cap));									//<	write cap
+	include_n_cnt(line, background_colour, &i, scnt(background_colour));		//<	write background colour
 	if (background_char == ':') {												//<	if ':' --> '':''
 		line[i++] = '\'';
 		line[i++] = ':';
@@ -71,11 +65,8 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 		for (j = 0; j < 3; j++)
 			line[i++] = ' ';
 	}
-
-
 	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));					//<	set heart colour
 	include_n_cnt(line, cap, &i, scnt(cap));									//<	write cap
-
 	if (background_char == ':') {												//<	if ':' --> set background colour && '':'
 		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '\'';
@@ -158,7 +149,6 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
 	}
-
 	line[i] = DELIM;
 	len += ++i;
 	line[i] = 0;
@@ -167,13 +157,11 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	m_line = MAX(m_line, i);
 	i = 0;
 
-
 	/*	fifth line 	*/
 
 	include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	line[i++] = background_char;
 	line[i++] = background_char;
-
 	if (background_char == ':') 
 		line[i++] = '.';
 	else  {
@@ -182,7 +170,6 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	}
 	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
 	include_n_cnt(line, fifth_line, &i, scnt(fifth_line));
-
 	if (background_char == ':') {
 		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
@@ -192,7 +179,6 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 		line[i++] = ' ';
 		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	}
-
 	line[i++] = background_char;
 	line[i++] = background_char;
 	line[i] = DELIM;
@@ -206,7 +192,6 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	/*	sixth line 	*/
 
 	include_n_cnt(line, background_colour, &i, scnt(background_colour));
-
 	for (j = 0; j < 4; j++)
 		line[i++] = background_char;
 
@@ -218,7 +203,6 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	}
 	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
 	include_n_cnt(line, sixth_line, &i, scnt(sixth_line));
-
 	if (background_char == ':') {
 		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
@@ -228,10 +212,8 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 		line[i++] = ' ';
 		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	}
-
 	for (j = 0; j < 4; j++)
 		line[i++] = background_char;
-
 	line[i] = DELIM;
 	len += ++i;
 	line[i] = 0;
@@ -243,7 +225,6 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	/*	seventh line*/
 
 	include_n_cnt(line, background_colour, &i, scnt(background_colour));
-
 	for (j = 0; j < 6; j++)
 		line[i++] = background_char;
 
@@ -255,7 +236,6 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	}
 	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
 	include_n_cnt(line, sev_line, &i, scnt(sev_line));
-
 	if (background_char == ':') {
 		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
@@ -265,15 +245,13 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 		line[i++] = ' ';
 		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	}
-
 	for (j = 0; j < 6; j++)
 		line[i++] = background_char;
-
 	line[i] = END;
 	len += ++i;
 	line[i] = 0;
 	fwrite(line, SZ(C), i, ptr);
-
+	/*	*/
 	par->max_line = MAX(m_line, i);
 	par->max_len = len;
 
