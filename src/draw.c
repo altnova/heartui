@@ -21,24 +21,13 @@ V window_dif_change(S* rows, S col, C ch, ter_conf _ter_conf, I pause)
 	j = pause/p;
 
 	show_img(rows, col, ch, _ter_conf);
-
-
+	
 	for (i = 0; i < j; i++) {
 		usleep(p);
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
 		if (_ter_var->ws_col != _ter_conf->ws_col || _ter_var->ws_row != _ter_conf->ws_row)	
 			show_img(rows, col, ch, _ter_conf);
 	}
-/*
-	for (i = 0; i < j; i++) {
-		show_img(rows, col, ch, _ter_conf);
-		ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
-		usleep(p);
-		if (_ter_var->ws_col != _ter_conf->ws_col || _ter_var->ws_row != _ter_conf->ws_row)	
-
-	}*/
-
-
 }
 
 V include_string(S str_1, S str_2, I ptr, I max)				//<	writes in str_2 into str_1
