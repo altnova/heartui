@@ -116,9 +116,9 @@ V draw_heart()																								//< print rand img
 		pos = get_addr(rand() % par->amount, idx);					//< get address of img in db
 		get_heart(db, pos, heart);									//< get img pattern into heart
 		get_background(db, back, pos);								//< get background info into back
-		show_img(heart, back->col, back->ch, _ter_conf);			//<	draw img
+		// show_img(heart, back->col, back->ch, _ter_conf);			//<	draw img
 		pause = (pause == (SEC * 6)/7) ? (SEC*1)/2 : (SEC * 6)/7;	//< set pause
-		usleep(pause);				
+		window_dif_change(heart, back->col, back->ch, _ter_conf, pause);				
 
     	if(kbhit())
     		break;
