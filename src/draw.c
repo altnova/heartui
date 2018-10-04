@@ -26,7 +26,7 @@ V clear_str(S str, I j)
 
 V show_img(S* heart, S background_col, C background_char, I w, I h)								//< print img 
 {
-	I j, dif, dif_1;
+	I j, dif;
 
 	if (w < 17 || h < 7) {													//<	in case of small screen
 		DO(h, {DO(w, {O(" ");});O("\n");});
@@ -48,7 +48,7 @@ V show_img(S* heart, S background_col, C background_char, I w, I h)								//< p
 		fflush(stdout);
 		O("\n");
 	}
-	dif = (w % 2) ? 0 : 1;
+
 	dif = (h % 2) ? 1 : 0;
 	DO((h - 7)/2 + dif, {DO(w, {O("%c", background_char);}); O("\n");}); 	//< draw down
 	fflush(stdout);
