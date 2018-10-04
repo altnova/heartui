@@ -11,6 +11,8 @@
 #include <sys/ioctl.h>
 #include "kbhit.h"
 
+V show_img(S* heart, S background_col, C background_char, ter_conf _ter_conf);
+
 V window_dif_change(S* rows, S col, C ch, ter_conf _ter_conf, I pause)
 {
 	struct winsize a;
