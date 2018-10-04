@@ -12,9 +12,15 @@
 
 /* wtites into ptr the block of unique img patter */
 
+V include_n_cnt(S str_1, S str_2, I *i, I max)
+{
+	include_string(str_1, str_2, *i, max);
+	*i += scnt(str_2);
+}
+
 params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_colour, S blink, S blink_colour, S string, S string_colour)		//< compose img into dat straight to ptr
 {
-	C line[200];
+	C line[250];
 	I i = 0, len = 0, j, m_line = 0;
 
 	C cap[6] = 			 ".:::.\0";
@@ -41,107 +47,83 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 
 	/*	first line 	*/
 
-	include_string(line, background_colour, i, scnt(background_colour));				//<	background colour
-	i += scnt(background_colour);
-	line[i++] = background_char;								//<	' ' || ':'
+	include_n_cnt(line, background_colour, &i, scnt(background_colour));		//<	background colour
+	line[i++] = background_char;												//<	' ' || ':'
 
 
-	if (background_char == ':') 								//<	if ':'	--> ':''
+	if (background_char == ':') 												//<	if ':'	--> ':''
 		line[i++] = '\'';
 	else {
-		include_string(line, CNRM, i, scnt(CNRM));				//<	if ' '	--> set nrm && ' '
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));								//<	if ' '	--> set nrm && ' '
 		line[i++] = ' ';
 	}
 
-	
-	include_string(line, heart_colour, i, scnt(heart_colour));					//<	set heart colour 			//!!!!
-	i += scnt(heart_colour);
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));					//<	set heart colour
+	include_n_cnt(line, cap, &i, scnt(cap));
+	include_n_cnt(line, background_colour, &i, scnt(background_colour));		//<	write
 
-	include_string(line, cap, i, scnt(cap));											//<	write cap
-	i += scnt(cap);
-	include_string(line, background_colour, i, scnt(background_colour));		//<	set background colour
-	i += scnt(background_colour);
-
-	if (background_char == ':') {								//<	if ':' --> '':''
+	if (background_char == ':') {												//<	if ':' --> '':''
 		line[i++] = '\'';
 		line[i++] = ':';
 		line[i++] = '\'';
 	}
-	else {														//<	if ' '	-->	'   '
+	else {																		//<	if ' '	-->	'   '
 		for (j = 0; j < 3; j++)
 			line[i++] = ' ';
 	}
 
-	include_string(line, heart_colour, i, scnt(heart_colour));					//<	set heart colour
-	i += scnt(heart_colour);
-	include_string(line, cap, i, scnt(cap));							//< write cap
-	i += scnt(cap);
 
-	if (background_char == ':') {								//<	if ':' --> set background colour && '':'
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));					//<	set heart colour
+	include_n_cnt(line, cap, &i, scnt(cap));									//<	write cap
+
+	if (background_char == ':') {												//<	if ':' --> set background colour && '':'
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '\'';
 		line[i++] = background_char;
 	}
-	else {														//< if ' ' --> set nrm && ' ' && set background colour && ' '
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+	else {																		//< if ' ' --> set nrm && ' ' && set background colour && ' '
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = background_char;
 	}
-	line[i] = DELIM;											//< DELIM
+	line[i] = DELIM;															//< DELIM
 	len += ++i;
 	line[i] = 0;
-	fwrite(line, SZ(C), i, ptr);								//< write in
-	clear_str(line, i+1);										//< clear line
+	fwrite(line, SZ(C), i, ptr);												//< write in
+	clear_str(line, i+1);														//< clear line
 	m_line = MAX(m_line, i);
 	i = 0;
 
-
-
 	/*	second line */
 
-	include_string(line, CNRM, i, scnt(CNRM));						//<	set nrm
-	i += scnt(CNRM);
-	line[i++] = ' ';										//<	' '
-	include_string(line, heart_colour, i, scnt(heart_colour));				//<	set heart colour
-	i += scnt(heart_colour);
-	include_string(line, sec_line, i, scnt(sec_line));					//< sec_line
-	i += scnt(sec_line);
-	include_string(line, blink_colour, i, scnt(blink_colour));				//<	blink colour
-	i +=  scnt(blink_colour);
-	include_string(line, blink, i, scnt(blink));						//< blink
-	i += scnt(blink);
-	include_string(line, heart_colour, i, scnt(heart_colour));				//<	heart colour
-	i += scnt(heart_colour);
-	line[i++] = ':';										//< '::'
+	include_n_cnt(line, CNRM, &i, scnt(CNRM));									//<	set nrm
+	line[i++] = ' ';															//<	' '
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));					//<	set heart col
+	include_n_cnt(line, sec_line, &i, scnt(sec_line));							//<	sec line
+	include_n_cnt(line, blink_colour, &i, scnt(blink_colour));					//<	blink colour
+	include_n_cnt(line, blink, &i, scnt(blink));								//<	blink
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));					//<	heart colour
+	line[i++] = ':';															//< '::'
 	line[i++] = ':';
-	include_string(line, CNRM, i, scnt(CNRM));						//< set nrm
-	i += scnt(CNRM);
-	line[i++] = ' ';										//<	' '
-	line[i] = DELIM;										//<	DELIM
+	include_n_cnt(line, CNRM, &i, scnt(CNRM));									//<	set nrm
+	line[i++] = ' ';															//<	' '
+	line[i] = DELIM;															//<	DELIM
 	len += ++i;
 	line[i] = 0;
-	fwrite(line, SZ(C), i, ptr);							//<	write in
-	clear_str(line, i+1);									//<	clear line
+	fwrite(line, SZ(C), i, ptr);												//<	write in
+	clear_str(line, i+1);														//<	clear line
 	m_line = MAX(m_line, i);
 	i = 0;
 
 	
 	/*	third line 	*/
 
-	include_string(line, CNRM, i, scnt(CNRM));						
-	i += scnt(CNRM);
+	include_n_cnt(line, CNRM, &i, scnt(CNRM));
 	line[i++] = ' ';
-	include_string(line, heart_colour, i, scnt(heart_colour));
-	i += scnt(heart_colour);
-	include_string(line, th_line, i, scnt(th_line));
-	i += scnt(th_line);
-	include_string(line, CNRM, i, scnt(CNRM));
-	i += scnt(CNRM);
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
+	include_n_cnt(line, th_line, &i, scnt(th_line));
+	include_n_cnt(line, CNRM, &i, scnt(CNRM));
 	line[i++] = ' ';
 	line[i] = DELIM;
 	len += ++i;
@@ -151,43 +133,29 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	m_line = MAX(m_line, i);
 	i = 0;
 
-
-
 	/*	fourth line */
 	
 	if (background_char == ':') {
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
 	}
 	else {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
 	}
-
-	include_string(line, heart_colour, i, scnt(heart_colour));
-	i += scnt(heart_colour);
-
-	include_string(line, fourth_line_1, i, scnt(fourth_line_1));
-	i += scnt(fourth_line_1);
-	include_string(line, string_colour, i, scnt(string_colour));
-	i += scnt(string_colour);
-	include_string(line, string, i, scnt(string));
-	i += scnt(string);
-	include_string(line, heart_colour, i, scnt(heart_colour));
-	i += scnt(heart_colour);
-	include_string(line, fourth_line_2, i, scnt(fourth_line_2));
-	i += scnt(fourth_line_2);
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
+	include_n_cnt(line, fourth_line_1, &i, scnt(fourth_line_1));
+	include_n_cnt(line, string_colour, &i, scnt(string_colour));
+	include_n_cnt(line, string, &i, scnt(string));
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
+	include_n_cnt(line, fourth_line_2, &i, scnt(fourth_line_2));
 
 	if (background_char == ':') {
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
 	}
 	else {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
 	}
 
@@ -202,34 +170,27 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 
 	/*	fifth line 	*/
 
-	include_string(line, background_colour, i, scnt(background_colour));
-	i += scnt(background_colour);
+	include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	line[i++] = background_char;
 	line[i++] = background_char;
 
 	if (background_char == ':') 
 		line[i++] = '.';
 	else  {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
 	}
-	include_string(line, heart_colour, i, scnt(heart_colour));
-	i += scnt(heart_colour);
-	include_string(line, fifth_line, i, scnt(fifth_line));
-	i += scnt(fifth_line);
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
+	include_n_cnt(line, fifth_line, &i, scnt(fifth_line));
 
 	if (background_char == ':') {
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
 	}
 	else  {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);	
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	}
 
 	line[i++] = background_char;
@@ -241,13 +202,10 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	clear_str(line, i+1);
 	m_line = MAX(m_line, i);
 	i = 0;
-
-
 
 	/*	sixth line 	*/
 
-	include_string(line, background_colour, i, scnt(background_colour));
-	i += scnt(background_colour);
+	include_n_cnt(line, background_colour, &i, scnt(background_colour));
 
 	for (j = 0; j < 4; j++)
 		line[i++] = background_char;
@@ -255,26 +213,20 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	if (background_char == ':') 
 		line[i++] = '.';
 	else  {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
 	}
-	include_string(line, heart_colour, i, scnt(heart_colour));
-	i += scnt(heart_colour);
-	include_string(line, sixth_line, i, scnt(sixth_line));
-	i += scnt(sixth_line);
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
+	include_n_cnt(line, sixth_line, &i, scnt(sixth_line));
 
 	if (background_char == ':') {
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
 	}
 	else  {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);	
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	}
 
 	for (j = 0; j < 4; j++)
@@ -288,12 +240,9 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	m_line = MAX(m_line, i);
 	i = 0;
 
-
-
 	/*	seventh line*/
 
-	include_string(line, background_colour, i, scnt(background_colour));
-	i += scnt(background_colour);
+	include_n_cnt(line, background_colour, &i, scnt(background_colour));
 
 	for (j = 0; j < 6; j++)
 		line[i++] = background_char;
@@ -301,42 +250,31 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	if (background_char == ':') 
 		line[i++] = '.';
 	else  {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
 	}
-	include_string(line, heart_colour, i, scnt(heart_colour));
-	i += scnt(heart_colour);
-	include_string(line, sev_line, i, 4);
-	i += scnt(sev_line);
+	include_n_cnt(line, heart_colour, &i, scnt(heart_colour));
+	include_n_cnt(line, sev_line, &i, scnt(sev_line));
 
 	if (background_char == ':') {
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 		line[i++] = '.';
 	}
 	else  {
-		include_string(line, CNRM, i, scnt(CNRM));
-		i += scnt(CNRM);
+		include_n_cnt(line, CNRM, &i, scnt(CNRM));
 		line[i++] = ' ';
-		include_string(line, background_colour, i, scnt(background_colour));
-		i += scnt(background_colour);	
+		include_n_cnt(line, background_colour, &i, scnt(background_colour));
 	}
 
 	for (j = 0; j < 6; j++)
 		line[i++] = background_char;
 
 	line[i] = END;
-	
 	len += ++i;
 	line[i] = 0;
 	fwrite(line, SZ(C), i, ptr);
 
-	// clear_str(line, i+1);
-	m_line = MAX(m_line, i);
-	// i = 0;
-
-	par->max_line = m_line;
+	par->max_line = MAX(m_line, i);
 	par->max_len = len;
 
 	R par;
