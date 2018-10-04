@@ -11,7 +11,7 @@
 #include "square.h"
 
 
-S* get_heart(FILE* db, I ptr, S* heart)			      //< get img from ptr
+S* get_heart(FILE* db, I ptr, S* heart)			      //< get img pattern from ptr
 {
 	C c = 'c';
 	I i, j;
@@ -32,7 +32,7 @@ S* get_heart(FILE* db, I ptr, S* heart)			      //< get img from ptr
 }
 
 
-I get_addr(I num, FILE *idx)						//< get ptr of specific img
+I get_addr(I num, FILE *idx)						      //< get ptr of specific img
 {
 	I addr;
     rewind(idx);
@@ -42,7 +42,7 @@ I get_addr(I num, FILE *idx)						//< get ptr of specific img
 	R addr;
 }
 
-V get_background(FILE *db, background back, I ptr)
+V get_background(FILE *db, background back, I ptr)        //< get background info for specific img
 {
     rewind(db);
     fseek(db, ptr, SEEK_SET);
@@ -51,20 +51,19 @@ V get_background(FILE *db, background back, I ptr)
     rewind(db);
 }
 
-V get_params(FILE *idx, params par)
+V get_params(FILE *idx, params par)                       //< get pParams from idx
 {
     rewind(idx);
     fread(par, SZ(pParams), 1, idx);
     rewind(idx);
 }
 
-V make_db()											//< compose db and idx
+V make_db()											      //< compose db and idx
 {
 	FILE *db, *idx;
 	I addr;
-	params par;
-    pParams p = {0, 0};
-
+	params par, heart_par;
+    pParams p = {0, 0}, heart_par_;
 	I i, j, k ,l, m, n, o, len = 0;
     I limj1, limj2, limo1, limo2;
 
@@ -93,6 +92,7 @@ V make_db()											//< compose db and idx
 	idx = 	fopen("bin/idx.dat", "w+b");
 
     par = &p;
+    heart_par = &heart_par_;
 
     fwrite(par, SZ(pParams), 1, idx);
 
@@ -112,8 +112,9 @@ V make_db()											//< compose db and idx
     						for (o = limo1; o < limo2; o++) {
     							addr = ftell(db);
     							par_str_col = (!n) ? hrt_col[k] : str_col[o];
-                                len = fill_heart(db, bck_col[j], bck_chr[i], hrt_col[k], blnk[l], blnk_col[m], str[n], par_str_col);
-    							par->max_len = MAX(par->max_len, len);
+                                heart_par = fill_heart(db, bck_col[j], bck_chr[i], hrt_col[k], blnk[l], blnk_col[m], str[n], par_str_col);
+    							par->max_len = MAX(par->max_len, heart_par->max_len);
+                                par->max_line = MAX(par->max_line, heart_par->max_line);
     							par->amount++;
     							fwrite(&addr, SZ(I), 1, idx);
     						}	
@@ -124,7 +125,6 @@ V make_db()											//< compose db and idx
   	}
     rewind(idx);
   	fwrite(par, SZ(pParams), 1, idx);
-    O("amount --> %d; max_len --> %d\n", par->amount, par->max_len);
   	fclose(db);
   	fclose(idx);
 }
