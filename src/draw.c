@@ -11,6 +11,33 @@
 #include <sys/ioctl.h>
 #include "kbhit.h"
 
+V window_dif_change(S* rows, S col, C ch, ter_conf _ter_conf, I pause)
+{
+	struct winsize a;
+	ter_conf _ter_var = &a;
+	I j, i, p = SEC/100;
+	j = pause/p;
+
+	show_img(rows, col, ch, _ter_conf);
+
+
+	for (i = 0; i < j; i++) {
+		usleep(p);
+		ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
+		if (_ter_var->ws_col != _ter_conf->ws_col || _ter_var->ws_row != _ter_conf->ws_row)	
+			show_img(rows, col, ch, _ter_conf);
+	}
+/*
+	for (i = 0; i < j; i++) {
+		show_img(rows, col, ch, _ter_conf);
+		ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
+		usleep(p);
+		if (_ter_var->ws_col != _ter_conf->ws_col || _ter_var->ws_row != _ter_conf->ws_row)	
+
+	}*/
+
+
+}
 
 V include_string(S str_1, S str_2, I ptr, I max)				//<	writes in str_2 into str_1
 {
@@ -24,7 +51,6 @@ V clear_str(S str, I j)											//<	set 0 for str[0] -->str[j-1]
 	for (I i = 0; i < j; i++)
 		str[i] = 0;
 }
-
 
 V show_img(S* heart, S background_col, C background_char, ter_conf _ter_conf)								//< print img 
 {
@@ -54,16 +80,10 @@ V show_img(S* heart, S background_col, C background_char, ter_conf _ter_conf)			
 		fflush(stdout);
 		O("\n");
 	}
-	
+
 	dif = (_ter_conf->ws_row % 2) ? 1 : 0;
 	DO((_ter_conf->ws_row - HEART_H)/2 + dif, {DO(_ter_conf->ws_col, {O("%c", background_char);}); O("\n");}); 	//< draw down
 	fflush(stdout);
-
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
-
-	if (_ter_var->ws_col != _ter_conf->ws_col || _ter_conf->ws_row != _ter_var->ws_row)						//<	if screen size changed
-		show_img(heart, background_col, background_char, _ter_conf);										//<	draw the same img with different size
-
 }
 
 V draw_heart()																								//< print rand img
@@ -88,7 +108,6 @@ V draw_heart()																								//< print rand img
 	for (i = 0; i < HEART_H; i++) 
 		heart[i] = malloc(SZ(C) * par->max_line);
 
-
 	CLEAR;
 
 	for (;;) { 														//< testing 
@@ -102,7 +121,6 @@ V draw_heart()																								//< print rand img
     	if(kbhit())
     		break;
 	}
-
 
 	O("%s\n", CNRM);												//<	set back to normal
 
