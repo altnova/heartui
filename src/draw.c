@@ -9,6 +9,7 @@
 #include "dat.h"
 #include "config.h"
 #include <sys/ioctl.h>
+#include "kbhit.h"
 
 
 V include_string(S str_1, S str_2, I ptr, I max)				//<	writes in str_2 into str_1
@@ -62,8 +63,9 @@ V show_img(S* heart, S background_col, C background_char, ter_conf _ter_conf)			
 V draw_heart()																					//< print rand img
 {
 	FILE *db, *idx;
-	I pos, i, j, pause = SEC;
+	I pos, i, j, pause = SEC, n, bytesWaiting;
 	S *heart;
+	C c = ' ';
 	pParams para = {0, 0};
 	params par = &para;
 	pBackground back_;
@@ -83,17 +85,26 @@ V draw_heart()																					//< print rand img
 
 	CLEAR;
 
-	for(i = 0; i < 20; i++) { 					//< testing 
-		pos = get_addr(rand() % par->amount, idx);
+	for(;;) { 																			//< testing 
+		pos = get_addr(rand() % par->amount, idx);					//< get address of img in db
 
-		get_heart(db, pos, heart);
-		get_background(db, back, pos);
+		get_heart(db, pos, heart);									//< get img pattern into heart
+		get_background(db, back, pos);								//< get background info into back
 	
-		show_img(heart, back->col, back->ch, _ter_conf);
+		show_img(heart, back->col, back->ch, _ter_conf);			//<	draw img
 
-		pause = (pause == (SEC * 6)/7) ? (SEC*1)/2 : (SEC * 6)/7;
-		usleep(pause);
+		pause = (pause == (SEC * 6)/7) ? (SEC*1)/2 : (SEC * 6)/7;	//< set pause
+		usleep(pause);				
+
+    	if (kbhit()) {
+    		// fseek(stdin, -1, SEEK_CUR);
+    		// fwrite(&c, SZ(C), 1, stdin);
+    		// fflush(stdin);
+    		break;
+    	}
 	}
+
+
 
 	for (i = 0; i < HEART_H; i++) 
 		free(heart[i]); 
