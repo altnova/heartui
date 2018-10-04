@@ -17,7 +17,7 @@ V window_dif_change(S* rows, S col, C ch, ter_conf _ter_conf, I pause)
 {
 	struct winsize a;
 	ter_conf _ter_var = &a;
-	I j, i, p = SEC/100;
+	I j, i, p = SEC/60;
 	j = pause/p;
 
 	show_img(rows, col, ch, _ter_conf);
@@ -112,15 +112,15 @@ V draw_heart()																								//< print rand img
 
 	CLEAR;
 
-	for (;;) { 														//< testing 
+	for (;;) { 														
 		pos = get_addr(rand() % par->amount, idx);					//< get address of img in db
 		get_heart(db, pos, heart);									//< get img pattern into heart
 		get_background(db, back, pos);								//< get background info into back
-		// show_img(heart, back->col, back->ch, _ter_conf);			//<	draw img
+
 		pause = (pause == (SEC * 6)/7) ? (SEC*1)/2 : (SEC * 6)/7;	//< set pause
 		window_dif_change(heart, back->col, back->ch, _ter_conf, pause);				
 
-    	if(kbhit())
+    	if(kbhit())													//< break if any key pressed
     		break;
 	}
 
