@@ -6,13 +6,18 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <string.h>
+#include <sys/ioctl.h>
+
 
 #define SEC 1000000
 #define END '@'
 #define DELIM '#'
 
-#define gotoxy(x,y) printf("\033[%d;%dH",(x),(y))
+#define HEART_H 7
+#define HEART_W 17
+// #define MAX_COL_LEN 19
 
+#define gotoxy(x,y) printf("\033[%d;%dH",(x),(y))
 
 #define UP(x) printf("\033[%dA", (x)); 		// Move up X lines;
 #define DOWN(x) printf("\033[%dB", (x)); 	// Move down X lines;
@@ -22,8 +27,9 @@
 
 
 typedef struct Params {
-	I amount;
-	I max_len;
+	UJ amount;
+	UJ max_len;
+	UJ max_line;
 } pParams;
 
 typedef struct Background {
@@ -31,14 +37,18 @@ typedef struct Background {
 	C ch;
 } pBackground;
 
+
+typedef struct winsize pTerminal_conf;
+
+/*
 typedef struct Terminal_conf {
 	I width;
 	I height;
 }	pTer_conf;
-
+*/
 typedef pParams* params;
 typedef pBackground* background;
-typedef pTer_conf* ter_conf;
+typedef pTerminal_conf* ter_conf;
 
 
 
@@ -52,7 +62,5 @@ typedef pTer_conf* ter_conf;
 #define CNRM 	"\x1b[0;0m\0"
 
 	
-
 ext V get_background(FILE *db, background back, I ptr);
-
 ext V get_params(FILE *idx, params par);
