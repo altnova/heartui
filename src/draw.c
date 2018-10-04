@@ -105,6 +105,7 @@ V draw_heart()																					//< print rand img
 	}
 
 
+	O("%s\n", CNRM);
 
 	for (i = 0; i < HEART_H; i++) 
 		free(heart[i]); 
