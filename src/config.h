@@ -45,10 +45,10 @@ typedef pTerminal_conf* ter_conf;
 
 #define CWHT 	"\x1b[0;0m\x1b[37m\0"
 #define CBLU 	"\x1b[0;0m\x1b[34m\0"
-#define CCYN 	"\x1b[0;0m\x1b[36m\0"
-#define BCYN 	"\x1b[0;0m\x1b[37;40m\0"
-#define BPNKCW 	"\x1b[0;0m\x1b[37;41m\0"
-#define BMGNCW 	"\x1b[0;0m\x1b[37:45m\0"
+// #define CCYN 	"\x1b[0;0m\x1b[36m\0"
+// #define BCYN 	"\x1b[0;0m\x1b[37;40m\0"
+// #define BPNKCW 	"\x1b[0;0m\x1b[37;41m\0"
+// #define BMGNCW 	"\x1b[0;0m\x1b[37:45m\0"
 #define CRED 	"\x1b[0;0m\x1b[31m\0"
 #define CNRM 	"\x1b[0;0m\0"
 
