@@ -9,6 +9,16 @@
 #include "config.h"
 #include "draw.h"
 #include "square.h"
+#include <sys/stat.h>
+#include <dirent.h>
+#include <limits.h>
+#include "make_palette.h"
+
+I dir_exists(S dirname)
+{
+    DIR *d;
+    R ((d = opendir(dirname)) != NULL) ? 0 : 1;
+}
 
 S* get_heart(FILE* db, I ptr, S* heart)					//< get img pattern from ptr
 {
@@ -62,17 +72,26 @@ V make_db()													//< compose db and idx
 	I addr;
 	params par, heart_par;
 	pParams p = {0, 0}, heart_par_;
-	I i, j, k ,l, m, n, o, len = 0;
+	I i, j, k ,l, m, n, o, len;
 	I limj1, limj2, limo1, limo2;
 	S par_str_col;
+    // C path[6] = "/bin/\0";
+    C cur_dir[PATH_MAX];
+    DIR *d;
 
-
+    len = lines();
 	/*  make your own combination   */
 
 	C bck_chr[3] = " :\0";
 
-	S bck_col[6]	= {CWHT, CBLU, CCYN, BCYN, BPNKCW, BMGNCW};
-	S hrt_col[3]	= {CRED, CWHT, BPNKCW};
+	// S bck_col[6]	= {CWHT, CBLU, CCYN, BCYN, BPNKCW, BMGNCW};
+	// S hrt_col[3]	= {CRED, CWHT, BPNKCW};
+
+    S* palette = make_palette(); 
+
+    //< ^
+
+
 	S blnk[2];
 	S blnk_col[2]   = {CWHT, CRED};
 	S str[4];
@@ -87,7 +106,12 @@ V make_db()													//< compose db and idx
 
 	blnk[0] = bl1; blnk[1] = bl2;
 	str[0] = str_1; str[1] = str_2; str[2] = str_3; str[3] = str_4;
-   
+
+    getcwd(cur_dir, SZ(cur_dir));                                               //< if /bin doesn't exist
+    if (!dir_exists(strcat(cur_dir, "/bin/")));
+         mkdir(cur_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+
+
 	db = 	fopen("bin/db.dat", "w+b");
 	idx = 	fopen("bin/idx.dat", "w+b");
 
@@ -96,24 +120,30 @@ V make_db()													//< compose db and idx
 
 	fwrite(par, SZ(pParams), 1, idx);
 
+	// O("%d len\n", len);
+	// R;
+
 	/*  if you changed settings ^ don't forget to modify cycles' params	 */
 
 	for (i = 0; i < 2; i++){						//< background character
-		limj1 = (i) ? 0 : 3;
-		limj2 = limj1 + 3;
+		// limj1 = (i) ? 0 : 3;
+		// limj2 = limj1 + 3;
+		O("im here!\n");
+		for (j = 0; j < len; j++) {						//< background colour
+			O("im here!\n");
+			O("%d  ", j);
+			for (k = 0; k < len; k++){							//< heart colour
 
-		for (j = limj1; j < limj2; j++) {						//< background colour
-			for (k = 0; k < 3; k++){							//< heart colour
 				for (l = 0; l < 2; l++) {						//< blink style
-					m = l;										//< blink colour
+					// m = l;										//< blink colour
 						for (n = 0; n < 4; n++) {				//< string style
-							limo1 = (n) ? 1 : 0;
-							limo2 = (n) ? 3 : 1;
+							// limo1 = (n) ? 1 : 0;
+							// limo2 = (n) ? 3 : 1;
 
-							for (o = limo1; o < limo2; o++) { 	//< string colour
+							for (o = 0; o < 3; o++) { 	//< string colour
 								addr = ftell(db);
-								par_str_col = (!n) ? hrt_col[k] : str_col[o];
-								heart_par = fill_heart(db, bck_col[j], bck_chr[i], hrt_col[k], blnk[l], blnk_col[m], str[n], par_str_col);
+								// par_str_col = (!n) ? hrt_col[k] : str_col[o];
+								heart_par = fill_heart(db, palette[j], bck_chr[i], palette[k], blnk[l], blnk_col[l], str[n], str_col[o]);
 
 								par->max_len = MAX(par->max_len, heart_par->max_len);
 								par->max_line = MAX(par->max_line, heart_par->max_line);
@@ -124,8 +154,19 @@ V make_db()													//< compose db and idx
 						}
 				}
 			}
+			O("%d  ", j);
 		}
+		O("\nSEC PART\n");
 	}
+
+	O("\n");
+	
+    // for (i = 0; i < len; i++)
+        // free(palette[i]);
+    // free(palette);
+    
+
+    O("ALL FINE\n");
 	rewind(idx);
 	fwrite(par, SZ(pParams), 1, idx);
 	fclose(db);
