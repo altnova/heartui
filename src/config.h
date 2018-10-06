@@ -26,13 +26,25 @@
 
 typedef struct Params {
 	UJ amount;
-	UJ max_len;
-	UJ max_line;
+	// UJ max_len;
+	// UJ max_line;
 } pParams;
-
+/*
 typedef struct Background {
 	C col[27];						//<	max len of colour str
 	C ch;
+} pBackground;
+*/
+
+typedef struct Background {
+	C bck_col[17];		//< 20				//<	max len of colour str
+	C ch;				//<	1
+	C hrt_col[17];		//<	20
+	C blink[3];			//<	3
+	C bln_col[17];		//<	21
+	C string[6];		//<	6
+	C str_col[17];		//<	21
+
 } pBackground;
 
 
