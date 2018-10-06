@@ -6,9 +6,10 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <string.h>
-#include "dat.h"
+
+
 #include "config.h"
-#include "draw.h"
+
 #include <limits.h>
 
 /* wtites into ptr the block of unique img pattern */
@@ -20,11 +21,13 @@ V include_n_cnt(S str_1, S str_2, I *i)
 	*i += scnt(str_2);
 }
 
-params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_colour, S blink, S blink_colour, S string, S string_colour)		//< compose img into dat straight to ptr
+
+
+V fill_heart(FILE *ptr, S background_colour, C background_char, S heart_colour, S blink, S blink_colour, S string, S string_colour)		//< compose img into dat straight to ptr
 {
 	C line[PATH_MAX];
 	I i = 0, len = 0, j, m_line = 0;
-
+/*
 	C cap[6] = 			 ".:::.\0";
 	C sec_line[12] = 	":::::::.:::\0";
 	C th_line[16] = 	":::::::::::::::\0";
@@ -33,20 +36,50 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	C fifth_line[12] = 		"\':::::::::\'\0";
 	C sixth_line[8] =		"\':::::\'\0";
 	C sev_line[4] = 		"\':\'\0";
+*/
+
+//<		|:'.:::.':'.:::.':|		//<		|  .:::.   .:::.  |
+//<		| :::::::.:::.|:: |		//<		| :::::::.:::.|:: |
+//<		| ::::::::::::::: |		//<		| ::::::::::::::: |
+//<		|.'::::мудак::::'.|		//<		| '::::мудак::::' |
+//<		|::.':::::::::'.::|		//<		|   ':::::::::'   |
+//<		|::::.':::::'.::::|		//<		|     ':::::'     |
+//<		|::::::.':'.::::::|		//<		|       ':'       |
+
+
 
 	pParams par_;
 	params par = &par_;
 	pBackground bck_;
 	background bck = &bck_;
-	strcpy(bck->col, background_colour);
-	bck->ch = background_char;									//<		bck 	img pattern 
+
+	strcpy(bck->bck_col, background_colour);
+	bck->ch = background_char;
+	strcpy(bck->hrt_col, heart_colour);
+	strcpy(bck->blink, blink);
+	strcpy(bck->bln_col, blink_colour);
+	strcpy(bck->string, string);
+	strcpy(bck->str_col, string_colour);
+
+																//<		bck 	img pattern 
 	fwrite(bck, SZ(pBackground), 1, ptr);						//<	|_______|_______________________|
 																//<	write in bck info
-	len += SZ(pBackground);
-	clear_str(line, i+1);
+
+/*
+	strcat(line, background_colour);
+	i = scnt(background_colour);
+	line[i++] = DELIM;
+	line[i++] = background_char;
+	line[i++] = DELIM;
+	strcat(line, )
+*/
+
+
+	// len += SZ(pBackground);
+	// clear_str(line, i+1);
 
 	/*	first line 	*/
-
+/*
 	include_n_cnt(line, background_colour, &i);		//<	background colour
 	line[i++] = background_char;												//<	' ' || ':'
 	if (background_char == ':') 												//<	if ':'	--> ':''
@@ -87,19 +120,19 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	clear_str(line, i+1);														//< clear line
 	m_line = MAX(m_line, i);
 	i = 0;
-
+*/
 	/*	second line */
-
-	include_n_cnt(line, CNRM, &i);									//<	set nrm
+/*
+	include_n_cnt(line, CNRM, &i);												//<	set nrm
 	line[i++] = ' ';															//<	' '
-	include_n_cnt(line, heart_colour, &i);					//<	set heart col
-	include_n_cnt(line, sec_line, &i);							//<	sec line
-	include_n_cnt(line, blink_colour, &i);					//<	blink colour
-	include_n_cnt(line, blink, &i);								//<	blink
-	include_n_cnt(line, heart_colour, &i);					//<	heart colour
+	include_n_cnt(line, heart_colour, &i);										//<	set heart col
+	include_n_cnt(line, sec_line, &i);											//<	sec line
+	include_n_cnt(line, blink_colour, &i);										//<	blink colour
+	include_n_cnt(line, blink, &i);												//<	blink
+	include_n_cnt(line, heart_colour, &i);										//<	heart colour
 	line[i++] = ':';															//< '::'
 	line[i++] = ':';
-	include_n_cnt(line, CNRM, &i);									//<	set nrm
+	include_n_cnt(line, CNRM, &i);												//<	set nrm
 	line[i++] = ' ';															//<	' '
 	line[i] = DELIM;															//<	DELIM
 	len += ++i;
@@ -109,9 +142,9 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	m_line = MAX(m_line, i);
 	i = 0;
 
-	
+	*/
 	/*	third line 	*/
-
+/*
 	include_n_cnt(line, CNRM, &i);
 	line[i++] = ' ';
 	include_n_cnt(line, heart_colour, &i);
@@ -125,9 +158,9 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	clear_str(line, i+1);
 	m_line = MAX(m_line, i);
 	i = 0;
-
+*/
 	/*	fourth line */
-	
+/*	
 	if (background_char == ':') {
 		include_n_cnt(line, background_colour, &i);
 		line[i++] = '.';
@@ -158,9 +191,9 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	clear_str(line, i+1);
 	m_line = MAX(m_line, i);
 	i = 0;
-
+*/
 	/*	fifth line 	*/
-
+/*
 	include_n_cnt(line, background_colour, &i);
 	line[i++] = background_char;
 	line[i++] = background_char;
@@ -190,9 +223,9 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	clear_str(line, i+1);
 	m_line = MAX(m_line, i);
 	i = 0;
-
+*/
 	/*	sixth line 	*/
-
+/*
 	include_n_cnt(line, background_colour, &i);
 	for (j = 0; j < 4; j++)
 		line[i++] = background_char;
@@ -223,9 +256,9 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	clear_str(line, i+1);
 	m_line = MAX(m_line, i);
 	i = 0;
-
+*/
 	/*	seventh line*/
-
+/*
 	include_n_cnt(line, background_colour, &i);
 	for (j = 0; j < 6; j++)
 		line[i++] = background_char;
@@ -253,10 +286,12 @@ params fill_heart(FILE *ptr, S background_colour, C background_char, S heart_col
 	len += ++i;
 	line[i] = 0;
 	fwrite(line, SZ(C), i, ptr);
-	/*	*/
+	
 	par->max_line = MAX(m_line, i);
 	par->max_len = len;
-
+*/
 	// O("one filled heart!\n");
-	R par;
+	// R par;
 }
+
+
