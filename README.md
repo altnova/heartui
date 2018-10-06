@@ -20,5 +20,6 @@
 
 ```
  %	make 
+ %	make db
  %	make heart
 ```
