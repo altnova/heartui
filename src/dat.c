@@ -95,7 +95,7 @@ V make_db()													//< compose db and idx
 
 	S blnk[2];
 	S blnk_col[2]   = {CWHT, CRED};
-	S str[4];
+	S str[5];
 	S str_col[3]	= {CRED, CWHT, CBLU};
 
 	C bl1[3]		=   ".|\0";
@@ -110,7 +110,7 @@ V make_db()													//< compose db and idx
 	str[0] = str_1; str[1] = str_2; str[2] = str_3; str[3] = str_4, str[4] = str_0;
 
     getcwd(cur_dir, SZ(cur_dir));                                               //< if /bin doesn't exist
-    if (!dir_exists(strcat(cur_dir, "/bin/")));
+    if (!dir_exists(strcat(cur_dir, "/bin/")))
          mkdir(cur_dir, S_IRUSR | S_IWUSR | S_IXUSR);
 
 
