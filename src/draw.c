@@ -10,6 +10,9 @@
 #include "config.h"
 #include <sys/ioctl.h>
 #include "kbhit.h"
+#include <pwd.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 V show_img(S* heart, S background_col, C background_char, ter_conf _ter_conf);
 
@@ -21,7 +24,7 @@ V window_dif_change(S* rows, S col, C ch, ter_conf _ter_conf, I pause)
 	j = pause/p;
 
 	show_img(rows, col, ch, _ter_conf);
-	
+
 	for (i = 0; i < j; i++) {
 		usleep(p);
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
