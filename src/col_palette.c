@@ -250,7 +250,7 @@ S* make_palette()
 		}
 	}
 	colour[cnt][0] = 0;
-	draw_palette(colour, line);
+	// draw_palette(colour, line);
 	R colour;
 }
 
