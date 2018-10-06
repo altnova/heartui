@@ -16,8 +16,10 @@ I main()
 {
 	srand(time(NULL));
 	kbinit();
-	if (access("../bin/db.dat", F_OK) == -1 || access("../bin/idx.dat", F_OK) == -1) 
+
+	if (access("bin/db.dat", F_OK) == -1) 
 		make_db();
+
 	draw_heart();
 	kbfini();
 	R0;
