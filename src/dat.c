@@ -72,13 +72,12 @@ V make_db()													//< compose db and idx
 	I addr;
 	params par;
 	pParams p = {0};
-	I i, j, k ,l, m, n, o, len;
+	I i, j, k ,l, m, n, o, len, con, total;
 	I limj1, limj2, limo1, limo2;
 	S par_str_col;
-    // C path[6] = "/bin/\0";
+
     C cur_dir[PATH_MAX];
     DIR *d;
-    // S par_str_col;
 
     len = lines();
 	/*  make your own combination   */
@@ -91,7 +90,6 @@ V make_db()													//< compose db and idx
     S* palette = make_palette(); 
 
     //< ^
-
 
 	S blnk[2];
 	S blnk_col[2]   = {CWHT, CRED};
@@ -113,17 +111,16 @@ V make_db()													//< compose db and idx
     if (!dir_exists(strcat(cur_dir, "/bin/")))
          mkdir(cur_dir, S_IRUSR | S_IWUSR | S_IXUSR);
 
-
 	db = 	fopen("bin/db.dat", "w+b");
 	idx = 	fopen("bin/idx.dat", "w+b");
 
 	par = &p;
-	// heart_par = &heart_par_;
+
+	con = len * 2 * 5 * 3;
+	total = 2 * len * len * 2 * 5 * 3 - 2;
+	O("must be %d patterns\n", total);
 
 	fwrite(par, SZ(pParams), 1, idx);
-
-	// O("%d len\n", len);
-	// R;
 
 	/*  if you changed settings ^ don't forget to modify cycles' params	 */
 
@@ -153,17 +150,18 @@ V make_db()													//< compose db and idx
 				}
 				// O("%d  \t", k);
 			}
+
 			if (!(j%100)) {
-				O("%d \tin\n", (j + 1)* len * 12);
+				O("[make_db]  included %d\n", (i + 1) * (j + 1) * con);
 
 			}
 		}
 		O("HALF DONE\n");
 	}
 	
-    // for (i = 0; i < len; i++)
-        // free(palette[i]);
-    // free(palette);
+    for (i = 0; i < len; i++)
+        free(palette[i]);
+    free(palette);
 
 
     O("ALL FINE in making db && idx\n");
