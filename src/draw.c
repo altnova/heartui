@@ -42,8 +42,8 @@ V show_img(background heart_par, ter_conf _ter_conf)								//< print img
 	DO((_ter_conf->ws_row - HEART_H)/2, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 		//< draw top
 	fflush(stdout);
 
-	dif = (_ter_conf->ws_col % 2) ? 1 : 0;
-	dif = 1;
+	dif = (_ter_conf->ws_col % 2) ? 0 : 1;													
+	// dif = 1;
 	/*	row_1()		*/
 	draw_side(heart_par->bck_col, heart_par->ch, _ter_conf->ws_col, 0);								//<	draw left
 	row_1(heart_par->bck_col, heart_par->ch, heart_par->hrt_col, cnrm);
@@ -88,12 +88,13 @@ V show_img(background heart_par, ter_conf _ter_conf)								//< print img
 	O("\n");
 
 
-	dif = (_ter_conf->ws_row % 2) ? 1 : 0;
-	// DO((_ter_conf->ws_row - HEART_H)/2 + dif, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down
-	DO((_ter_conf->ws_row - HEART_H)/2 + dif - 3, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down
+	dif = (_ter_conf->ws_row % 2) ? 0 : 1;
 
-	O("w %d * h %d\n", _ter_conf->ws_col, _ter_conf->ws_row);
-	
+	DO((_ter_conf->ws_row - HEART_H)/2 + dif, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down
+	// DO((_ter_conf->ws_row - HEART_H)/2 + dif - 3, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down (test mode)
+
+	// O("w %d * h %d\n", _ter_conf->ws_col, _ter_conf->ws_row);
+
 	fflush(stdout);
 }
 
@@ -106,7 +107,7 @@ V window_dif_change(background heart_par, ter_conf _ter_conf, I pause)
 	j = pause/p;
 
 	show_img(heart_par, _ter_conf);
-	O("w %d * h %d\n", _ter_conf->ws_col, _ter_conf->ws_row);
+	// O("w %d * h %d\n", _ter_conf->ws_col, _ter_conf->ws_row);
 	for (i = 0; i < j; i++) {
 		usleep(p);
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
