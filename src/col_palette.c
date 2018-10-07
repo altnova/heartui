@@ -160,7 +160,7 @@ S* make_palette()
 			cnt++;
 		}
 	}
-	O("\ntotal: %d\n", cnt);
+	O("\ntotal colours: %d\n", cnt);
 	colour[cnt][0] = 0;
 	R colour;
 }
@@ -251,6 +251,7 @@ S* make_palette()
 	}
 	colour[cnt][0] = 0;
 	// draw_palette(colour, line);
+	O("\ntotal colours: %d\n", cnt);
 	R colour;
 }
 
