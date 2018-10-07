@@ -89,9 +89,11 @@ V show_img(background heart_par, ter_conf _ter_conf)								//< print img
 
 
 	dif = (_ter_conf->ws_row % 2) ? 1 : 0;
-	DO((_ter_conf->ws_row - HEART_H)/2 + dif, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down
-	// DO((_ter_conf->ws_row - HEART_H)/2 + dif - 3, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down
+	// DO((_ter_conf->ws_row - HEART_H)/2 + dif, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down
+	DO((_ter_conf->ws_row - HEART_H)/2 + dif - 3, {DO(_ter_conf->ws_col, {O("%c", heart_par->ch);}); O("\n");}); 	//< draw down
 
+	O("w %d * h %d\n", _ter_conf->ws_col, _ter_conf->ws_row);
+	
 	fflush(stdout);
 }
 
@@ -104,7 +106,7 @@ V window_dif_change(background heart_par, ter_conf _ter_conf, I pause)
 	j = pause/p;
 
 	show_img(heart_par, _ter_conf);
-
+	O("w %d * h %d\n", _ter_conf->ws_col, _ter_conf->ws_row);
 	for (i = 0; i < j; i++) {
 		usleep(p);
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, _ter_var);
@@ -131,7 +133,7 @@ V draw_heart()																								//< print rand img
 	idx = fopen("bin/idx.dat", "r+b");
 
 	get_params(idx, par);
-	O("IM IN DRAW!\n");
+	O("draw_heart();\n");
 
 	//<		background heart_par 	-->		keeps img colour sequence
 	//<		NEED TO:
